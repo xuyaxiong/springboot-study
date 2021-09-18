@@ -7,6 +7,8 @@ grant all on db_example.* to 'springuser'@'%';
 create table user
 (
     id bigint not null auto_increment comment '用户ID',
+    username varchar(50) comment '用户账号',
+    password varchar(50) comment '用户密码',
     name varchar(50) comment '用户名',
     email varchar(50) comment '用户邮箱',
     primary key (id)

@@ -16,10 +16,7 @@ public class UserController {
 
     @PostMapping
     public @ResponseBody
-    String addUser(@RequestParam String name, @RequestParam String email) {
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
+    String addUser(User user) {
         userService.save(user);
         return "Saved";
     }

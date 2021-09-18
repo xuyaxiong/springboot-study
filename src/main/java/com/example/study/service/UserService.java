@@ -1,16 +1,9 @@
 package com.example.study.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.study.model.User;
+import com.example.study.utils.DataWithPageInfo;
 
-import java.util.List;
-
-public interface UserService {
-    void add(User user);
-
-    void deleteById(int id);
-
-    User findById(int id);
-
-    List<User> findAll();
-
+public interface UserService extends IService<User> {
+    DataWithPageInfo getUsersWithPageInfo(Long currentPage, Integer pageSize);
 }

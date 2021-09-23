@@ -11,7 +11,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private final String secret = "12345678901234567890123456789012";
-    private long expire = 7 * 24 * 3600 * 1000;
+    private final long expire = 7 * 24 * 3600 * 1000;
 
     // 加密
     public String encrypt(String username) {

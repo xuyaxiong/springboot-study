@@ -1,45 +1,58 @@
 package com.example.study.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.study.model.Role;
 import com.example.study.model.User;
+import com.example.study.model.UserRole;
+import com.example.study.service.RoleService;
+import com.example.study.service.UserRoleService;
 import com.example.study.service.UserService;
 import com.example.study.utils.AjaxResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping(path = "/users")
+@RestController
 public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private UserRoleService userRoleService;
 
-    @PostMapping
+    @PostMapping(path = "/admin/users")
     public @ResponseBody
-    String addUser(User user) {
+    AjaxResponse addUser(@RequestParam String username, @RequestParam String password, @RequestParam String roleName) {
+        User user = new User(username, password);
         userService.save(user);
-        return "Saved";
+        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Role::getName, roleName);
+        Role role = roleService.getOne(queryWrapper, false);
+        userRoleService.save(new UserRole(user.getId(), role.getId()));
+        return AjaxResponse.success("添加成功");
     }
 
-    @GetMapping
+    @GetMapping(path = "/users")
     public @ResponseBody
     AjaxResponse findAllUsers(
             @RequestParam(value = "page", defaultValue = "1") Long pageNum,
             @RequestParam(value = "size", defaultValue = "10") Integer pageSize
     ) {
-        return new AjaxResponse(200, "查询成功", userService.getUsersWithPageInfo(pageNum, pageSize));
+        return AjaxResponse.success("查询成功", (userService.findAllUserAndRoles()));
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/users/{id}")
     public @ResponseBody
-    User findUserById(@PathVariable int id) {
-        return userService.getById(id);
+    AjaxResponse findUserById(@PathVariable Long id) {
+        User user = userService.findUserById(id);
+        return AjaxResponse.success("查询成功", user);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/admin/users/{id}")
     public @ResponseBody
-    String deleteUserById(@PathVariable int id) {
+    AjaxResponse deleteUserById(@PathVariable Long id) {
         userService.removeById(id);
-        return "Deleted";
+        return AjaxResponse.success("删除成功");
     }
 }

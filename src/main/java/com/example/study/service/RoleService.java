@@ -1,0 +1,8 @@
+package com.example.study.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.study.model.Role;
+
+public interface RoleService extends IService<Role> {
+
+}

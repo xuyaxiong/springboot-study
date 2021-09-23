@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.study.mapper.UserMapper">
+
+    <resultMap id="userRoleListMap" type="com.example.study.model.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="accountNonExpired" column="account_non_expired"/>
+        <result property="accountNonLocked" column="account_non_locked"/>
+        <result property="credentialsNonExpired" column="credentials_non_expired"/>
+        <result property="enabled" column="enabled"/>
+        <collection property="roles" ofType="com.example.study.model.Role" javaType="java.util.ArrayList">
+            <id property="id" column="role_id"/>
+            <result property="name" column="role_name"/>
+            <result property="nameZh" column="role_name_zh"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectAllUserAndRoles" resultMap="userRoleListMap">
+        select
+        u.id,
+        u.username,
+        u.password,
+        r.id role_id,
+        r.name role_name,
+        r.name_zh role_name_zh
+        from user u
+        inner join user_role ur on u.id = ur.user_id
+        inner join role r on ur.role_id = r.id
+    </select>
+
+    <select id="selectUserById" resultMap="userRoleListMap" parameterType="java.lang.Long">
+        select
+        u.id,
+        u.username,
+        u.password,
+        u.account_non_expired,
+        u.account_non_locked,
+        u.credentials_non_expired,
+        u.enabled,
+        r.id role_id,
+        r.name role_name,
+        r.name_zh role_name_zh
+        from user u
+        inner join user_role ur on u.id = ur.user_id
+        inner join role r on ur.role_id = r.id
+        where u.id = #{id}
+    </select>
+
+    <select id="selectUserByUsername" resultMap="userRoleListMap" parameterType="java.lang.String">
+        select
+        u.id,
+        u.username,
+        u.password,
+        u.account_non_expired,
+        u.account_non_locked,
+        u.credentials_non_expired,
+        u.enabled,
+        r.id role_id,
+        r.name role_name,
+        r.name_zh role_name_zh
+        from user u
+        inner join user_role ur on u.id = ur.user_id
+        inner join role r on ur.role_id = r.id
+        where u.username = #{username}
+    </select>
+
+    <select id="findAll" resultType="com.example.study.model.User">
+        select * from user
+    </select>
+    <insert id="insertUser" parameterType="com.example.study.model.User">
+        insert into user(
+        username,
+        password,
+        account_non_expired,
+        account_non_locked,
+        credentials_non_expired,
+        enabled
+        ) values (
+        #{username},
+        #{password},
+        #{accountNonExpired},
+        #{accountNonLocked},
+        #{credentialsNonExpired},
+        #{enabled}
+        )
+    </insert>
+</mapper>

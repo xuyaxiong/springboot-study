@@ -9,6 +9,7 @@ import com.example.study.service.UserRoleService;
 import com.example.study.service.UserService;
 import com.example.study.utils.AjaxResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,11 +21,14 @@ public class UserController {
     private RoleService roleService;
     @Autowired
     private UserRoleService userRoleService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping(path = "/admin/users")
     public @ResponseBody
     AjaxResponse addUser(@RequestParam String username, @RequestParam String password, @RequestParam String roleName) {
-        User user = new User(username, password);
+        String cryptPassword = passwordEncoder.encode(password);
+        User user = new User(username, cryptPassword);
         userService.save(user);
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(Role::getName, roleName);

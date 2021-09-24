@@ -8,7 +8,7 @@ create table user
 (
     id bigint not null auto_increment comment '用户ID',
     username varchar(50) comment '用户账号',
-    password varchar(50) comment '用户密码',
+    password varchar(256) comment '用户密码',
     account_non_expired bool,
     account_non_locked bool,
     credentials_non_expired bool,
@@ -36,10 +36,8 @@ create table user_role
 alter table user comment '用户角色关联表';
 
 -- 插入用户
-insert into user (id,username,password,account_non_expired,account_non_locked,credentials_non_expired, enabled) values (1,"xuyaxiong","123456",true,true,true,true);
-insert into user (id,username,password,account_non_expired,account_non_locked,credentials_non_expired, enabled) values (2,"danqiu","123456",true,true,true,true);
-insert into user (id,username,password,account_non_expired,account_non_locked,credentials_non_expired, enabled) values (3,"matang","123456",true,true,true,true);
-insert into user (id,username,password,account_non_expired,account_non_locked,credentials_non_expired, enabled) values (4,"haha","123456",true,true,true,true);
+-- 密码 123456
+insert into user (id,username,password,account_non_expired,account_non_locked,credentials_non_expired, enabled) values (1,"xuyaxiong","$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6",true,true,true,true);
 
 -- 插入角色
 insert into role (id,name,name_zh) values (1,"ROLE_admin","管理员");
@@ -49,6 +47,3 @@ insert into role (id,name,name_zh) values (4,"ROLE_visitor","访客");
 
 -- 关联用户及角色
 insert into user_role (user_id,role_id) values (1,1);
-insert into user_role (user_id,role_id) values (2,2);
-insert into user_role (user_id,role_id) values (3,3);
-insert into user_role (user_id,role_id) values (4,4);

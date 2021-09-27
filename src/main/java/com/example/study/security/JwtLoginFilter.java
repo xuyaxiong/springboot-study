@@ -40,7 +40,9 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
         StringBuilder sb = new StringBuilder();
         for (GrantedAuthority authority : authorities) {
-            sb.append(authority.getAuthority())
+            sb
+//                    .append("Role_")
+                    .append(authority.getAuthority())
                     .append(",");
         }
         User user = (User) authResult.getPrincipal();

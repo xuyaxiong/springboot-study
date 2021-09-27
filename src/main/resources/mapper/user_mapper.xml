@@ -24,6 +24,10 @@
         u.id,
         u.username,
         u.password,
+        u.account_non_expired,
+        u.account_non_locked,
+        u.credentials_non_expired,
+        u.enabled,
         r.id role_id,
         r.name role_name,
         r.name_zh role_name_zh

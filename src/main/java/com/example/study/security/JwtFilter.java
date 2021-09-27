@@ -26,7 +26,7 @@ public class JwtFilter extends GenericFilterBean {
         String jwtToken = req.getHeader("authorization");
         jwtToken = jwtToken.replace("Bearer ", "");
         Claims claims = jwtUtil.decrypt(jwtToken);
-        String username = claims.getSubject();//获取当前登录用户名
+        String username = claims.getSubject(); //获取当前登录用户名
         List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("roles"));
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(token);

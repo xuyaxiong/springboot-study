@@ -9,6 +9,7 @@ import com.example.study.service.UserRoleService;
 import com.example.study.service.UserService;
 import com.example.study.utils.AjaxResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,7 @@ public class UserController {
         return AjaxResponse.success("添加成功");
     }
 
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping(path = "/users")
     public @ResponseBody
     AjaxResponse findAllUsers(

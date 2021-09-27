@@ -3,23 +3,26 @@ package com.example.study.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
+@Component
 public class JwtUtil {
 
     private final String secret = "12345678901234567890123456789012";
     private final long expire = 7 * 24 * 3600 * 1000;
 
     // 加密
-    public String encrypt(String username) {
+    public String encrypt(String username, String roles) {
         Date now = new Date();
         Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         return Jwts
                 .builder()
                 .setSubject(username)
+                .claim("roles", roles)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expire))
                 .signWith(key)

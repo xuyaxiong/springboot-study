@@ -1,5 +1,7 @@
 package com.example.study.config;
 
+import com.example.study.security.JwtFilter;
+import com.example.study.security.JwtLoginFilter;
 import com.example.study.service.UserService;
 import com.example.study.utils.AjaxResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.PrintWriter;
 
@@ -44,41 +47,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasRole("admin")
                 .antMatchers("/user/**").hasRole("user")
+                .antMatchers("/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .successHandler((req, res, authentication) -> {
-                    res.setContentType("application/json;charset=utf-8");
-                    PrintWriter out = res.getWriter();
-                    out.write(new ObjectMapper().writeValueAsString(authentication.getPrincipal()));
-                    out.flush();
-                    out.close();
-                })
-                .failureHandler((req, res, exception) -> {
-                    res.setContentType("application/json;charset=utf-8");
-                    PrintWriter out = res.getWriter();
-                    out.write(new ObjectMapper().writeValueAsString(AjaxResponse.failure(-1, exception.getMessage())));
-                    out.flush();
-                    out.close();
-                })
-                .permitAll()
-                .and()
-                .logout()
-                .logoutSuccessHandler((req, res, authentication) -> {
-                    res.setContentType("application/json;charset=utf-8");
-                    PrintWriter out = res.getWriter();
-                    out.write(new ObjectMapper().writeValueAsString(AjaxResponse.success("注销成功")));
-                    out.flush();
-                    out.close();
-                })
-                .permitAll()
-                .and()
+                .addFilterBefore(new JwtLoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint((req, res, exception) -> {
                     res.setContentType("application/json;charset=utf-8");
                     PrintWriter out = res.getWriter();
-                    out.write(new ObjectMapper().writeValueAsString(AjaxResponse.failure(-1, "尚未登录")));
+                    out.write(new ObjectMapper().writeValueAsString(AjaxResponse.failure(-1, exception.getMessage())));
                     out.flush();
                     out.close();
                 });

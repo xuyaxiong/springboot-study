@@ -10,7 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class PageInfo {
     private Long pageNum;
-    private int pageSize;
+    private Integer pageSize;
     private Long pages;
     private Long total;
 }

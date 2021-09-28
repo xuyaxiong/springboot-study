@@ -1,6 +1,5 @@
 package com.example.study.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.study.model.Role;
 import com.example.study.model.User;
 import com.example.study.model.UserRole;
@@ -31,14 +30,12 @@ public class UserController {
         String cryptPassword = passwordEncoder.encode(password);
         User user = new User(username, cryptPassword);
         userService.save(user);
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Role::getName, roleName);
-        Role role = roleService.getOne(queryWrapper, false);
+        Role role = roleService.findRoleByName(roleName);
         userRoleService.save(new UserRole(user.getId(), role.getId()));
         return AjaxResponse.success("添加成功");
     }
 
-    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('ROLE_admin')")
     @GetMapping(path = "/users")
     public @ResponseBody
     AjaxResponse findAllUsers(

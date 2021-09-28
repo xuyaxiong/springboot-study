@@ -41,7 +41,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         StringBuilder sb = new StringBuilder();
         for (GrantedAuthority authority : authorities) {
             sb
-//                    .append("Role_")
+                    .append("ROLE_")
                     .append(authority.getAuthority())
                     .append(",");
         }

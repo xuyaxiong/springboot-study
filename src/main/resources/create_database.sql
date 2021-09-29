@@ -9,6 +9,7 @@ create table user
     id bigint not null auto_increment comment '用户ID',
     username varchar(50) comment '用户账号',
     password varchar(256) comment '用户密码',
+    email varchar(50) comment '用户邮箱',
     account_non_expired bool,
     account_non_locked bool,
     credentials_non_expired bool,
@@ -55,7 +56,7 @@ alter table role_privilege comment '角色权限关联表';
 
 -- 插入用户
 -- 密码 123456
-insert into user (id,username,password,account_non_expired,account_non_locked,credentials_non_expired, enabled) values (1,'xuyaxiong','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6',true,true,true,true);
+insert into user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired, enabled) values (1,'xuyaxiong','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','xyxlindy@163.com',true,true,true,true);
 
 -- 插入角色
 insert into role (id,name,name_zh) values (1,'admin','管理员');

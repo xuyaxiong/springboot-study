@@ -30,13 +30,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public List<User> findAllUserAndRoles() {
-        return userMapper.selectAllUserAndRoles();
+    public List<User> findAllUserAndRoles(Page<User> page) {
+        return userMapper.selectAllUserAndRoles(page);
     }
 
     @Override
     public User findUserById(Long id) {
         return userMapper.selectUserById(id);
+    }
+
+    @Override
+    public void addUser(User user) {
+        userMapper.insertUser(user);
+    }
+
+    @Override
+    public List<User> findByName(Page<User> page, String username, String email) {
+        return userMapper.findByName(page, username, email);
     }
 
     @Override

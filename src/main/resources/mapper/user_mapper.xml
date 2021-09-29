@@ -8,6 +8,7 @@
         <id property="id" column="id"/>
         <result property="username" column="username"/>
         <result property="password" column="password"/>
+        <result property="email" column="email"/>
         <result property="accountNonExpired" column="account_non_expired"/>
         <result property="accountNonLocked" column="account_non_locked"/>
         <result property="credentialsNonExpired" column="credentials_non_expired"/>
@@ -72,10 +73,35 @@
         where u.username = #{username}
     </select>
 
+    <select id="findByName" resultMap="userRoleListMap">
+        select
+        u.id,
+        u.username,
+        u.password,
+        u.email,
+        u.account_non_expired,
+        u.account_non_locked,
+        u.credentials_non_expired,
+        u.enabled,
+        r.id role_id,
+        r.name role_name,
+        r.name_zh role_name_zh
+        from user u
+        inner join user_role ur on u.id = ur.user_id
+        inner join role r on ur.role_id = r.id
+        where 1 = 1
+        <if test="username != null and username != ''">
+            and u.username like concat('%', #{username}, '%')
+        </if>
+        <if test="email != null and email != ''">
+            and u.email like concat('%', #{email}, '%')
+        </if>
+    </select>
+
     <select id="findAll" resultType="com.example.study.model.User">
         select * from user
     </select>
-    <insert id="insertUser" parameterType="com.example.study.model.User">
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         insert into user(
         username,
         password,

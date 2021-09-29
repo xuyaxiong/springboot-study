@@ -1,5 +1,6 @@
 package com.example.study.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.study.model.Role;
 import com.example.study.model.User;
 import com.example.study.model.UserRole;
@@ -7,6 +8,8 @@ import com.example.study.service.RoleService;
 import com.example.study.service.UserRoleService;
 import com.example.study.service.UserService;
 import com.example.study.utils.AjaxResponse;
+import com.example.study.utils.DataWithPageInfo;
+import com.example.study.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +32,7 @@ public class UserController {
     AjaxResponse addUser(@RequestParam String username, @RequestParam String password, @RequestParam String roleName) {
         String cryptPassword = passwordEncoder.encode(password);
         User user = new User(username, cryptPassword);
-        userService.save(user);
+        userService.addUser(user);
         Role role = roleService.findRoleByName(roleName);
         userRoleService.save(new UserRole(user.getId(), role.getId()));
         return AjaxResponse.success("添加成功");
@@ -39,10 +42,16 @@ public class UserController {
     @GetMapping(path = "/users")
     public @ResponseBody
     AjaxResponse findAllUsers(
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "test", required = false) String test,
             @RequestParam(value = "page", defaultValue = "1") Long pageNum,
             @RequestParam(value = "size", defaultValue = "10") Integer pageSize
     ) {
-        return AjaxResponse.success("查询成功", (userService.findAllUserAndRoles()));
+        var page = new Page<User>(pageNum, pageSize);
+        var users = userService.findByName(page, username, test);
+        var pageInfo = new PageInfo(pageNum, pageSize, page.getPages(), page.getTotal());
+        var data = new DataWithPageInfo(users, pageInfo);
+        return AjaxResponse.success("查询成功", data);
     }
 
     @GetMapping(path = "/users/{id}")

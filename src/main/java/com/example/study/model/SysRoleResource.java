@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RolePrivilege {
+public class SysRoleResource {
+    private Integer id;
     private Integer roleId;
     private Integer privilegeId;
 }

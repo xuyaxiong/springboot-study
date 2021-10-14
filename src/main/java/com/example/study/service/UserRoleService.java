@@ -1,8 +1,8 @@
 package com.example.study.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.study.model.UserRole;
+import com.example.study.model.SysUserRole;
 
-public interface UserRoleService extends IService<UserRole> {
+public interface UserRoleService extends IService<SysUserRole> {
 
 }

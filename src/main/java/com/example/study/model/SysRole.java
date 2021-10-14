@@ -1,10 +1,12 @@
 package com.example.study.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class Privilege {
+@NoArgsConstructor
+public class SysRole {
     private Integer id;
     private String name;
-    private String url;
+    private String nameZh;
 }

@@ -3,6 +3,12 @@ create database db_example;
 create user 'springuser'@'%' identified by 'ThePassword';
 grant all on db_example.* to 'springuser'@'%';
 
+drop table if exists sys_user;
+drop table if exists sys_role;
+drop table if exists sys_resource;
+drop table if exists sys_user_role;
+drop table if exists sys_role_resource;
+
 -- 创建用户表
 create table sys_user
 (
@@ -14,6 +20,9 @@ create table sys_user
     account_non_locked bool,
     credentials_non_expired bool,
     enabled bool,
+    created_at datetime comment '创建时间',
+    updated_at datetime comment '更新时间',
+    deleted_at datetime comment '删除时间',
     primary key (id)
 );
 alter table sys_user comment '用户表';
@@ -24,6 +33,9 @@ create table sys_role
     id int not null auto_increment comment '角色ID',
     name varchar(50) comment '角色名',
     name_zh varchar(50) comment '角色中文名',
+    created_at datetime comment '创建时间',
+    updated_at datetime comment '更新时间',
+    deleted_at datetime comment '删除时间',
     primary key (id)
 );
 alter table sys_role comment '角色表';
@@ -34,6 +46,9 @@ create table sys_resource
     id int not null auto_increment comment '资源ID',
     name varchar(50) comment '资源名',
     url varchar(200) comment '资源URL',
+    created_at datetime comment '创建时间',
+    updated_at datetime comment '更新时间',
+    deleted_at datetime comment '删除时间',
     primary key (id)
 );
 alter table sys_resource comment '资源表';
@@ -61,18 +76,19 @@ alter table sys_role_resource comment '角色资源关联表';
 
 -- 插入用户
 -- 密码 123456
-insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired, enabled) values (1,'xuyaxiong','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','xyxlindy@163.com',true,true,true,true);
+insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled,created_at) values (1,'xuyaxiong','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','xyxlindy@163.com',true,true,true,true,now());
+insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled,created_at) values (2,'user1','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','user1@163.com',true,true,true,true,now());
 
 -- 插入角色
-insert into sys_role (id,name,name_zh) values (1,'admin','管理员');
-insert into sys_role (id,name,name_zh) values (2,'user','用户');
-insert into sys_role (id,name,name_zh) values (3,'manager','经理');
-insert into sys_role (id,name,name_zh) values (4,'visitor','访客');
+insert into sys_role (id,name,name_zh,created_at) values (1,'admin','管理员',now());
+insert into sys_role (id,name,name_zh,created_at) values (2,'user','用户',now());
+insert into sys_role (id,name,name_zh,created_at) values (3,'manager','经理',now());
+insert into sys_role (id,name,name_zh,created_at) values (4,'visitor','访客',now());
 
 -- 插入权限
-insert into sys_resource (id,name,url) values (1,'用户管理','/users');
-insert into sys_resource (id,name,url) values (2,'角色管理','/roles');
-insert into sys_resource (id,name,url) values (3,'资源管理','/resources');
+insert into sys_resource (id,name,url,created_at) values (1,'用户管理','/users',now());
+insert into sys_resource (id,name,url,created_at) values (2,'角色管理','/roles',now());
+insert into sys_resource (id,name,url,created_at) values (3,'资源管理','/resources',now());
 
 -- 关联用户和角色
 insert into sys_user_role (id,user_id,role_id) values (1,1,1);

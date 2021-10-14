@@ -7,5 +7,5 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 
     void addUser(SysUser user);
 
-    SysUser findUserByUsername(String username);
+    void deleteUserById(Long userId);
 }

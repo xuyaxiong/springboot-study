@@ -1,5 +1,6 @@
 package com.example.study.utils;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,7 +11,19 @@ import lombok.Data;
 @AllArgsConstructor
 public class PageInfo {
     private Long pageNum;
-    private Integer pageSize;
+    private Long pageSize;
     private Long pages;
     private Long total;
+
+    public static DataWithPageInfo convert(Page page) {
+        return new DataWithPageInfo(
+                page.getRecords(),
+                new PageInfo(
+                        page.getCurrent(),
+                        page.getSize(),
+                        page.getPages(),
+                        page.getTotal()
+                )
+        );
+    }
 }

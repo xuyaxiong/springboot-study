@@ -1,12 +1,17 @@
 package com.example.study.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 public class SysUser {
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private String username; // 账号
     @JsonIgnore
@@ -17,6 +22,10 @@ public class SysUser {
     private boolean credentialsNonExpired;
     private boolean enabled;
 
+    private Date createdAt;
+    private Date updatedAt;
+    private Date deletedAt;
+
     public SysUser(String username, String password) {
         this.username = username;
         this.password = password;
@@ -24,5 +33,6 @@ public class SysUser {
         this.accountNonLocked = true;
         this.credentialsNonExpired = true;
         this.enabled = true;
+        this.createdAt = new Date();
     }
 }

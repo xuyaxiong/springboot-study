@@ -76,8 +76,9 @@ alter table sys_role_resource comment '角色资源关联表';
 
 -- 插入用户
 -- 密码 123456
-insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled,created_at) values (1,'xuyaxiong','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','xyxlindy@163.com',true,true,true,true,now());
+insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled,created_at) values (1,'admin','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','xyxlindy@163.com',true,true,true,true,now());
 insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled,created_at) values (2,'user1','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','user1@163.com',true,true,true,true,now());
+insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled,created_at) values (3,'manager1','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','manager1@163.com',true,true,true,true,now());
 
 -- 插入角色
 insert into sys_role (id,name,name_zh,created_at) values (1,'admin','管理员',now());
@@ -92,8 +93,12 @@ insert into sys_resource (id,name,url,created_at) values (3,'资源管理','/res
 
 -- 关联用户和角色
 insert into sys_user_role (id,user_id,role_id) values (1,1,1);
+insert into sys_user_role (id,user_id,role_id) values (2,2,2);
+insert into sys_user_role (id,user_id,role_id) values (3,3,3);
 
 -- 关联角色和权限
 insert into sys_role_resource (id,role_id,resource_id) values (1,1,1);
 insert into sys_role_resource (id,role_id,resource_id) values (2,1,2);
 insert into sys_role_resource (id,role_id,resource_id) values (3,1,3);
+insert into sys_role_resource (id,role_id,resource_id) values (4,2,2);
+insert into sys_role_resource (id,role_id,resource_id) values (5,3,3);

@@ -69,6 +69,11 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
     }
 
     @Override
+    public String refreshToken(String oldToken) {
+        return jwtTokenUtil.refreshHeadToken(oldToken);
+    }
+
+    @Override
     public DataWithPageInfo getUserList(String keyword, Long pageNum, Integer pageSize) {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper

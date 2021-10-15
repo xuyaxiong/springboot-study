@@ -6,13 +6,17 @@ import com.example.study.service.UserRoleService;
 import com.example.study.service.UserService;
 import com.example.study.utils.AjaxResponse;
 import com.example.study.utils.DataWithPageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 public class UserController {
 
@@ -24,11 +28,15 @@ public class UserController {
     private UserRoleService userRoleService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Value("${jwt.tokenHeader}")
+    private String tokenHeader;
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
 
     // 用户登录
     @PostMapping(path = "/login")
-    public @ResponseBody
-    AjaxResponse login(
+    @ResponseBody
+    public AjaxResponse login(
             @RequestParam("username") String username,
             @RequestParam("password") String password
     ) {
@@ -38,13 +46,14 @@ public class UserController {
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
+        tokenMap.put("tokenHead", tokenHead);
         return AjaxResponse.success("登录成功", tokenMap);
     }
 
     // 用户注册
     @PostMapping(path = "/register")
-    public @ResponseBody
-    AjaxResponse register(
+    @ResponseBody
+    public AjaxResponse register(
             @RequestParam("username") String username,
             @RequestParam("password") String password
     ) {
@@ -55,10 +64,26 @@ public class UserController {
         else return AjaxResponse.failure(-1, "注册失败");
     }
 
+    // 刷新Token
+    @GetMapping(path = "/refreshToken")
+    @ResponseBody
+    public AjaxResponse refreshToken(HttpServletRequest request) {
+        String token = request.getHeader(tokenHeader);
+        String refreshToken = userService.refreshToken(token);
+        if (refreshToken == null) {
+            return AjaxResponse.failure(-1, "Token已过期");
+        } else {
+            Map<String, String> tokenMap = new HashMap<>();
+            tokenMap.put("token", refreshToken);
+            tokenMap.put("tokenHead", tokenHead);
+            return AjaxResponse.success("刷新成功", tokenMap);
+        }
+    }
+
     // 查询用户列表
     @GetMapping(path = "/users")
-    public @ResponseBody
-    AjaxResponse getUserList(
+    @ResponseBody
+    public AjaxResponse getUserList(
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "pageNum", defaultValue = "1") Long pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize
@@ -69,8 +94,8 @@ public class UserController {
 
     // 删除用户
     @DeleteMapping(path = "/users/{id}")
-    public @ResponseBody
-    AjaxResponse deleteUserById(
+    @ResponseBody
+    public AjaxResponse deleteUserById(
             @PathVariable(name = "id") Long userId
     ) {
         userService.deleteUserById(userId);

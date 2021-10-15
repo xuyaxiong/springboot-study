@@ -20,7 +20,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
-    implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.3.3'
+    implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.3.4'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     // JWT

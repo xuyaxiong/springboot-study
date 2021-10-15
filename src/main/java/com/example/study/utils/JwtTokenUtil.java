@@ -5,10 +5,10 @@ import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,10 +16,12 @@ import java.util.Map;
 public class JwtTokenUtil {
     private static final String CLAIM_KEY_USERNAME = "sub";
     private static final String CLAIM_KEY_CREATED = "created";
-    private final String secret = "12345678901234567890123456789012";
-    private final Long expiration = 7 * 24 * 3600L;
-    private final String tokenHead = "Bearer ";
-    private final Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    @Value("${jwt.secret}")
+    private String secret;
+    @Value("${jwt.expiration}")
+    private Long expiration;
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
 
     /**
      * 根据负载生成Token
@@ -31,7 +33,7 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
-                .signWith(key)
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
                 .compact();
     }
 
@@ -168,7 +170,7 @@ public class JwtTokenUtil {
     private boolean tokenRefreshJustBefore(String token, int time) {
         Claims claims = getClaimsFromToken(token);
         Date created = claims.get(CLAIM_KEY_CREATED, Date.class);
-        Date refreshDate = new Date(0);
+        Date refreshDate = new Date();
         return refreshDate.after(created) && refreshDate.before(DateUtil.offsetSecond(created, time));
     }
 

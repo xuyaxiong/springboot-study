@@ -15,6 +15,12 @@ jwt:
   expiration: 604800 # 7天
   tokenHead: 'Bearer '
 
+security:
+  ignored: # 路径白名单
+    urls:
+      - /login
+      - /register
+
 logging:
   level:
     com.example.study.mapper: debug

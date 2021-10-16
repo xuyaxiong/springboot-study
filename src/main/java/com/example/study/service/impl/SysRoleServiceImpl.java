@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.study.mapper.SysRoleMapper;
 import com.example.study.model.SysRole;
-import com.example.study.service.RoleService;
+import com.example.study.service.SysRoleService;
 import com.example.study.utils.DataWithPageInfo;
 import com.example.study.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class RoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements RoleService {
+public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
 
     @Autowired
     private SysRoleMapper sysRoleMapper;

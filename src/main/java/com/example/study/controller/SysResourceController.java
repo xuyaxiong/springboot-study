@@ -2,15 +2,15 @@ package com.example.study.controller;
 
 import com.example.study.model.SysResource;
 import com.example.study.security.DynamicSecurityMetadataSource;
-import com.example.study.service.ResourceService;
+import com.example.study.service.SysResourceService;
 import com.example.study.utils.AjaxResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class ResourceController {
+public class SysResourceController {
     @Autowired
-    private ResourceService resourceService;
+    private SysResourceService sysResourceService;
     @Autowired
     private DynamicSecurityMetadataSource dynamicSecurityMetadataSource;
 
@@ -22,7 +22,7 @@ public class ResourceController {
             @RequestParam(name = "url") String url
     ) {
         SysResource resource = new SysResource(name, url);
-        resource = resourceService.addResource(resource);
+        resource = sysResourceService.addResource(resource);
         if (resource != null) {
             dynamicSecurityMetadataSource.clearDataSource();
             return AjaxResponse.success("添加成功", resource);
@@ -34,7 +34,7 @@ public class ResourceController {
     @DeleteMapping(path = "/admin/resources/{id}")
     @ResponseBody
     public AjaxResponse deleteResourceById(@PathVariable(name = "id") Integer resourceId) {
-        int count = resourceService.deleteResourceById(resourceId);
+        int count = sysResourceService.deleteResourceById(resourceId);
         if (count > 0) {
             dynamicSecurityMetadataSource.clearDataSource();
             return AjaxResponse.success("删除成功");
@@ -46,7 +46,7 @@ public class ResourceController {
     @PutMapping(path = "/admin/resources/{id}")
     @ResponseBody
     public AjaxResponse updateResource(@PathVariable Integer id, @RequestBody SysResource resource) {
-        int count = resourceService.updateResource(id, resource);
+        int count = sysResourceService.updateResource(id, resource);
         if (count > 0) {
             return AjaxResponse.success("更新成功");
         } else {
@@ -60,6 +60,6 @@ public class ResourceController {
             @RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize
     ) {
-        return AjaxResponse.success("查询成功", resourceService.getResourceList(pageNum, pageSize));
+        return AjaxResponse.success("查询成功", sysResourceService.getResourceList(pageNum, pageSize));
     }
 }

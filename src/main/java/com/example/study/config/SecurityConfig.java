@@ -3,8 +3,8 @@ package com.example.study.config;
 import com.example.study.model.SysResource;
 import com.example.study.security.*;
 import com.example.study.service.DynamicSecurityService;
-import com.example.study.service.ResourceService;
-import com.example.study.service.UserService;
+import com.example.study.service.SysResourceService;
+import com.example.study.service.SysUserService;
 import com.example.study.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,9 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserService userService;
+    SysUserService sysUserService;
     @Autowired
-    ResourceService resourceService;
+    SysResourceService sysResourceService;
 
     @Bean
     public DynamicSecurityService dynamicSecurityService() {
@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             @Override
             public Map<String, ConfigAttribute> loadDataSource() {
                 Map<String, ConfigAttribute> map = new ConcurrentHashMap<>();
-                List<SysResource> privilegeList = resourceService.list();
+                List<SysResource> privilegeList = sysResourceService.list();
                 for (SysResource privilege : privilegeList) {
                     map.put(privilege.getUrl(), new org.springframework.security.access.SecurityConfig(privilege.getId() + ":" + privilege.getName()));
                 }
@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService);
+        auth.userDetailsService(sysUserService);
     }
 
     @Override

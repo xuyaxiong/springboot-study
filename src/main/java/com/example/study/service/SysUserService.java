@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService extends IService<SysUser>, UserDetailsService {
+public interface SysUserService extends IService<SysUser>, UserDetailsService {
 
 
     // 用户登录

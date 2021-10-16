@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.study.model.SysRole;
 import com.example.study.utils.DataWithPageInfo;
 
-public interface RoleService extends IService<SysRole> {
+public interface SysRoleService extends IService<SysRole> {
 
     // 添加角色
     SysRole addRole(SysRole role);

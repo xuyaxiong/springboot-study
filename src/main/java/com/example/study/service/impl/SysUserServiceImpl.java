@@ -10,7 +10,7 @@ import com.example.study.model.SysResource;
 import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
 import com.example.study.model.SysUserDetails;
-import com.example.study.service.UserService;
+import com.example.study.service.SysUserService;
 import com.example.study.utils.DataWithPageInfo;
 import com.example.study.utils.JwtTokenUtil;
 import com.example.study.utils.PageInfo;
@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements UserService {
+public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 
     @Autowired
     private SysUserMapper sysUserMapper;

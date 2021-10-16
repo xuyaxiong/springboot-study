@@ -2,9 +2,8 @@ package com.example.study.controller;
 
 import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
-import com.example.study.service.RoleService;
-import com.example.study.service.UserRoleService;
-import com.example.study.service.UserService;
+import com.example.study.service.SysRoleService;
+import com.example.study.service.SysUserService;
 import com.example.study.utils.AjaxResponse;
 import com.example.study.utils.DataWithPageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +20,12 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-public class UserController {
+public class SysUserController {
 
     @Autowired
-    private UserService userService;
+    private SysUserService sysUserService;
     @Autowired
-    private RoleService roleService;
-    @Autowired
-    private UserRoleService userRoleService;
+    private SysRoleService sysRoleService;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Value("${jwt.tokenHeader}")
@@ -43,7 +40,7 @@ public class UserController {
             @RequestParam("username") String username,
             @RequestParam("password") String password
     ) {
-        String token = userService.login(username, password);
+        String token = sysUserService.login(username, password);
         if (token == null) {
             return AjaxResponse.failure(-1, "登录失败");
         }
@@ -61,7 +58,7 @@ public class UserController {
             @RequestParam("password") String password
     ) {
         SysUser user = new SysUser(username, password);
-        user = userService.register(user);
+        user = sysUserService.register(user);
         if (user != null)
             return AjaxResponse.success("注册成功", user);
         else return AjaxResponse.failure(-1, "注册失败");
@@ -72,7 +69,7 @@ public class UserController {
     @ResponseBody
     public AjaxResponse refreshToken(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
-        String refreshToken = userService.refreshToken(token);
+        String refreshToken = sysUserService.refreshToken(token);
         if (refreshToken == null) {
             return AjaxResponse.failure(-1, "Token已过期");
         } else {
@@ -89,14 +86,14 @@ public class UserController {
     public AjaxResponse deleteUserById(
             @PathVariable(name = "id") Long userId
     ) {
-        userService.deleteUserById(userId);
+        sysUserService.deleteUserById(userId);
         return AjaxResponse.success("删除成功");
     }
 
     @PutMapping(path = "/admin/users/{id}")
     @ResponseBody
     public AjaxResponse updateUser(@PathVariable Long id, @RequestBody SysUser user) {
-        int count = userService.updateUser(id, user);
+        int count = sysUserService.updateUser(id, user);
         if (count > 0) {
             return AjaxResponse.success("更新成功");
         } else {
@@ -112,7 +109,7 @@ public class UserController {
             @RequestParam(value = "pageNum", defaultValue = "1") Long pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize
     ) {
-        DataWithPageInfo result = userService.getUserList(keyword, pageNum, pageSize);
+        DataWithPageInfo result = sysUserService.getUserList(keyword, pageNum, pageSize);
         return AjaxResponse.success("查询成功", result);
     }
 
@@ -123,12 +120,12 @@ public class UserController {
         if (principal == null) {
             return AjaxResponse.failure(-1, "查询失败");
         }
-        SysUser user = userService.findUserByUsername(principal.getName());
+        SysUser user = sysUserService.findUserByUsername(principal.getName());
         Map<String, Object> data = new HashMap<>();
         data.put("id", user.getId());
         data.put("username", user.getUsername());
         data.put("email", user.getEmail());
-        List<SysRole> roles = userService.findRoleListByUserId(user.getId());
+        List<SysRole> roles = sysUserService.findRoleListByUserId(user.getId());
         data.put("roles", roles);
         return AjaxResponse.success("查询成功", data);
     }

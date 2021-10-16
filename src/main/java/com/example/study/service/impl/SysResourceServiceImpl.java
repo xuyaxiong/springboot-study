@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.study.mapper.SysResourceMapper;
 import com.example.study.model.SysResource;
-import com.example.study.service.ResourceService;
+import com.example.study.service.SysResourceService;
 import com.example.study.utils.DataWithPageInfo;
 import com.example.study.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class ResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysResource> implements ResourceService {
+public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysResource> implements SysResourceService {
 
     @Autowired
     private SysResourceMapper sysResourceMapper;

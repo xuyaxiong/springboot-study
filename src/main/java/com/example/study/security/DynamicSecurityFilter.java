@@ -49,7 +49,6 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
         } finally {
             super.afterInvocation(token, null);
         }
-
     }
 
     @Override

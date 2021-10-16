@@ -11,23 +11,13 @@ import com.example.study.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class ResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysResource> implements ResourceService {
 
     @Autowired
     private SysResourceMapper sysResourceMapper;
-
-
-    @Override
-    public DataWithPageInfo getResourceList(Long pageNum, Integer pageSize) {
-        QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
-        wrapper
-                .orderByDesc("created_at") // 根据创建时间降序排列
-                .isNull("deleted_at");
-        Page<SysResource> page = new Page<>(pageNum, pageSize);
-        sysResourceMapper.selectPage(page, wrapper);
-        return PageInfo.convert(page);
-    }
 
     @Override
     public SysResource addResource(SysResource resource) {
@@ -40,5 +30,28 @@ public class ResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysResou
             sysResourceMapper.insert(resource);
             return resource;
         } else return null;
+    }
+
+    @Override
+    public int deleteResourceById(Integer resourceId) {
+        return sysResourceMapper.deleteResourceById(resourceId);
+    }
+
+    @Override
+    public int updateResource(Integer resourceId, SysResource resource) {
+        resource.setId(resourceId);
+        resource.setUpdatedAt(new Date());
+        return sysResourceMapper.updateById(resource);
+    }
+
+    @Override
+    public DataWithPageInfo getResourceList(Long pageNum, Integer pageSize) {
+        QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
+        wrapper
+                .orderByDesc("created_at") // 根据创建时间降序排列
+                .isNull("deleted_at");
+        Page<SysResource> page = new Page<>(pageNum, pageSize);
+        sysResourceMapper.selectPage(page, wrapper);
+        return PageInfo.convert(page);
     }
 }

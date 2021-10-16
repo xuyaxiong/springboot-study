@@ -1,5 +1,6 @@
 package com.example.study.controller;
 
+import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
 import com.example.study.service.RoleService;
 import com.example.study.service.UserRoleService;
@@ -13,7 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -80,6 +83,27 @@ public class UserController {
         }
     }
 
+    // 删除用户
+    @DeleteMapping(path = "/admin/users/{id}")
+    @ResponseBody
+    public AjaxResponse deleteUserById(
+            @PathVariable(name = "id") Long userId
+    ) {
+        userService.deleteUserById(userId);
+        return AjaxResponse.success("删除成功");
+    }
+
+    @PutMapping(path = "/admin/users/{id}")
+    @ResponseBody
+    public AjaxResponse updateUser(@PathVariable Long id, @RequestBody SysUser user) {
+        int count = userService.updateUser(id, user);
+        if (count > 0) {
+            return AjaxResponse.success("更新成功");
+        } else {
+            return AjaxResponse.failure(-1, "更新失败");
+        }
+    }
+
     // 查询用户列表
     @GetMapping(path = "/users")
     @ResponseBody
@@ -92,13 +116,20 @@ public class UserController {
         return AjaxResponse.success("查询成功", result);
     }
 
-    // 删除用户
-    @DeleteMapping(path = "/users/{id}")
+    // 获取当前登录用户信息
+    @GetMapping(path = "/users/info")
     @ResponseBody
-    public AjaxResponse deleteUserById(
-            @PathVariable(name = "id") Long userId
-    ) {
-        userService.deleteUserById(userId);
-        return AjaxResponse.success("删除成功");
+    public AjaxResponse getUserInfo(Principal principal) {
+        if (principal == null) {
+            return AjaxResponse.failure(-1, "查询失败");
+        }
+        SysUser user = userService.findUserByUsername(principal.getName());
+        Map<String, Object> data = new HashMap<>();
+        data.put("id", user.getId());
+        data.put("username", user.getUsername());
+        data.put("email", user.getEmail());
+        List<SysRole> roles = userService.findRoleListByUserId(user.getId());
+        data.put("roles", roles);
+        return AjaxResponse.success("查询成功", data);
     }
 }

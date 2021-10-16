@@ -18,3 +18,4 @@ jwt:
 logging:
   level:
     com.example.study.mapper: debug
+    com.example.study.controller: debug

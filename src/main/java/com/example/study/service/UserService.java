@@ -1,9 +1,12 @@
 package com.example.study.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
 import com.example.study.utils.DataWithPageInfo;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 public interface UserService extends IService<SysUser>, UserDetailsService {
 
@@ -22,4 +25,11 @@ public interface UserService extends IService<SysUser>, UserDetailsService {
 
     // 删除用户
     void deleteUserById(Long userId);
+
+    // 更新用户
+    int updateUser(Long id, SysUser user);
+
+    SysUser findUserByUsername(String username);
+
+    List<SysRole> findRoleListByUserId(Long userId);
 }

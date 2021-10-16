@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface SysResourceMapper extends BaseMapper<SysResource> {
     List<SysResource> getSysResourceListByUserId(Long userId);
+
+    int deleteResourceById(Integer roleId);
 }

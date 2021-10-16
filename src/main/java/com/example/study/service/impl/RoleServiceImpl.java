@@ -11,22 +11,13 @@ import com.example.study.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class RoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements RoleService {
 
     @Autowired
     private SysRoleMapper sysRoleMapper;
-
-    @Override
-    public DataWithPageInfo getRoleList(Long pageNum, Integer pageSize) {
-        QueryWrapper<SysRole> wrapper = new QueryWrapper<>();
-        wrapper
-                .orderByDesc("created_at") // 根据创建时间降序排列
-                .isNull("deleted_at");
-        Page<SysRole> page = new Page<>(pageNum, pageSize);
-        sysRoleMapper.selectPage(page, wrapper);
-        return PageInfo.convert(page);
-    }
 
     @Override
     public SysRole addRole(SysRole role) {
@@ -42,7 +33,25 @@ public class RoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impleme
     }
 
     @Override
-    public void deleteRoleById(Integer roleId) {
-        sysRoleMapper.deleteRoleById(roleId);
+    public int deleteRoleById(Integer roleId) {
+        return sysRoleMapper.deleteRoleById(roleId);
+    }
+
+    @Override
+    public int updateRole(Integer roleId, SysRole role) {
+        role.setId(roleId);
+        role.setUpdatedAt(new Date());
+        return sysRoleMapper.updateById(role);
+    }
+
+    @Override
+    public DataWithPageInfo getRoleList(Long pageNum, Integer pageSize) {
+        QueryWrapper<SysRole> wrapper = new QueryWrapper<>();
+        wrapper
+                .orderByDesc("created_at") // 根据创建时间降序排列
+                .isNull("deleted_at");
+        Page<SysRole> page = new Page<>(pageNum, pageSize);
+        sysRoleMapper.selectPage(page, wrapper);
+        return PageInfo.convert(page);
     }
 }

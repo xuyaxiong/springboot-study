@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.study.mapper.SysResourceMapper;
+import com.example.study.mapper.SysRoleMapper;
 import com.example.study.mapper.SysUserMapper;
-import com.example.study.model.AdminUserDetails;
 import com.example.study.model.SysResource;
+import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
+import com.example.study.model.SysUserDetails;
 import com.example.study.service.UserService;
 import com.example.study.utils.DataWithPageInfo;
 import com.example.study.utils.JwtTokenUtil;
@@ -20,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +30,8 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
 
     @Autowired
     private SysUserMapper sysUserMapper;
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
     @Autowired
     private SysResourceMapper sysResourceMapper;
     @Autowired
@@ -93,6 +98,27 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
     }
 
     @Override
+    public int updateUser(Long id, SysUser user) {
+        user.setId(id);
+        user.setUpdatedAt(new Date());
+        return sysUserMapper.updateById(user);
+    }
+
+    @Override
+    public SysUser findUserByUsername(String username) {
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+        wrapper
+                .eq("username", username)
+                .isNull("deleted_at");
+        return sysUserMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public List<SysRole> findRoleListByUserId(Long userId) {
+        return sysRoleMapper.findRoleListByUserId(userId);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper
@@ -100,6 +126,6 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
                 .isNull("deleted_at");
         SysUser sysUser = sysUserMapper.selectOne(wrapper);
         List<SysResource> privileges = sysResourceMapper.getSysResourceListByUserId(sysUser.getId());
-        return new AdminUserDetails(sysUser, privileges);
+        return new SysUserDetails(sysUser, privileges);
     }
 }

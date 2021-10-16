@@ -24,6 +24,7 @@ public class SysUser {
 
     private Date createdAt;
     private Date updatedAt;
+    @JsonIgnore
     private Date deletedAt;
 
     public SysUser(String username, String password) {

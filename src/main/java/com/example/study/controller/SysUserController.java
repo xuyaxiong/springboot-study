@@ -1,7 +1,9 @@
 package com.example.study.controller;
 
+import com.example.study.model.SysMenu;
 import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
+import com.example.study.service.SysMenuService;
 import com.example.study.service.SysRoleService;
 import com.example.study.service.SysUserService;
 import com.example.study.utils.AjaxResponse;
@@ -26,6 +28,8 @@ public class SysUserController {
     private SysUserService sysUserService;
     @Autowired
     private SysRoleService sysRoleService;
+    @Autowired
+    private SysMenuService sysMenuService;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Value("${jwt.tokenHeader}")
@@ -127,6 +131,8 @@ public class SysUserController {
         data.put("email", user.getEmail());
         List<SysRole> roles = sysUserService.findRoleListByUserId(user.getId());
         data.put("roles", roles);
+        List<SysMenu> menus = sysMenuService.findMenuListByUserId(user.getId());
+        data.put("menus", menus);
         return AjaxResponse.success("查询成功", data);
     }
 }

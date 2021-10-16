@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.study.mapper.SysMenuMapper">
+    <update id="deleteMenuById">
+        update sys_menu set deleted_at=now() where id=#{menuId}
+    </update>
+    <select id="findMenuListByUserId" resultType="com.example.study.model.SysMenu">
+        select
+        m.id,
+        m.name,
+        m.parent_id,
+        m.level,
+        m.sort,
+        m.icon,
+        m.hidden,
+        m.created_at,
+        m.updated_at
+        from sys_user_role ur
+        inner join sys_role r on ur.role_id = r.id
+        inner join sys_role_menu rm on r.id = rm.role_id
+        inner join sys_menu m on rm.menu_id = m.id
+        where ur.user_id = #{userId}
+    </select>
+</mapper>

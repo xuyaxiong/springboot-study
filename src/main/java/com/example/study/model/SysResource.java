@@ -2,6 +2,7 @@ package com.example.study.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,6 +16,7 @@ public class SysResource {
 
     private Date createdAt;
     private Date updatedAt;
+    @JsonIgnore
     private Date deletedAt;
 
     public SysResource(String name, String url) {

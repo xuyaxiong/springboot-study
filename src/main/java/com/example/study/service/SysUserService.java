@@ -29,7 +29,9 @@ public interface SysUserService extends IService<SysUser>, UserDetailsService {
     // 更新用户
     int updateUser(Long id, SysUser user);
 
+    // 根据用户名查询用户
     SysUser findUserByUsername(String username);
 
+    // 根据userId查询角色列表
     List<SysRole> findRoleListByUserId(Long userId);
 }

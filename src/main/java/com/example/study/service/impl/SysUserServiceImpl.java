@@ -125,7 +125,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 .eq("username", username)
                 .isNull("deleted_at");
         SysUser sysUser = sysUserMapper.selectOne(wrapper);
-        List<SysResource> privileges = sysResourceMapper.getSysResourceListByUserId(sysUser.getId());
+        List<SysResource> privileges = sysResourceMapper.findResourceListByUserId(sysUser.getId());
         return new SysUserDetails(sysUser, privileges);
     }
 }

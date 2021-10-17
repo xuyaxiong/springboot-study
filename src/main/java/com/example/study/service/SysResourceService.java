@@ -14,5 +14,6 @@ public interface SysResourceService extends IService<SysResource> {
     // 删除资源
     int deleteResourceById(Integer resourceId);
 
+    // 更新资源
     int updateResource(Integer resourceId, SysResource resource);
 }

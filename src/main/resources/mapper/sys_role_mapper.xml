@@ -16,6 +16,34 @@
         r.updated_at
         from sys_user_role ur
         left join sys_role r on ur.role_id = r.id
-        where ur.user_id = 1;
+        where (ur.user_id = #{roleId} and r.deleted_at is null)
+    </select>
+
+    <select id="findMenuListByRoleId" resultType="com.example.study.model.SysMenu">
+        select
+        m.id,
+        m.name,
+        m.parent_id,
+        m.level,
+        m.sort,
+        m.icon,
+        m.hidden,
+        m.created_at,
+        m.updated_at
+        from sys_role_menu rm
+        inner join sys_menu m on rm.menu_id = m.id
+        where (rm.role_id = #{roleId} and m.deleted_at is null)
+    </select>
+
+    <select id="findResourceListByRoleId" resultType="com.example.study.model.SysResource">
+        select
+        r.id,
+        r.name,
+        r.url,
+        r.created_at,
+        r.updated_at
+        from sys_role_resource rr
+        inner join sys_resource r on rr.resource_id = r.id
+        where (rr.role_id = #{roleId} and deleted_at is null)
     </select>
 </mapper>

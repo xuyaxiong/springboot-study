@@ -5,19 +5,22 @@ import com.example.study.model.SysMenuNode;
 import com.example.study.service.SysMenuService;
 import com.example.study.utils.AjaxResponse;
 import com.example.study.utils.DataWithPageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 
+@Api(tags = "菜单管理")
 @RestController
 public class SysMenuController {
 
     @Autowired
     private SysMenuService sysMenuService;
 
-    // 添加菜单
+    @ApiOperation("添加菜单")
     @PostMapping(path = "/admin/menus")
     @ResponseBody
     public AjaxResponse addMenu(@RequestBody SysMenu sysMenu) {
@@ -30,7 +33,7 @@ public class SysMenuController {
         }
     }
 
-    // 删除菜单
+    @ApiOperation("删除菜单")
     @DeleteMapping(path = "/admin/menus/{id}")
     @ResponseBody
     public AjaxResponse deleteMenuById(@PathVariable(name = "id") Integer id) {
@@ -42,7 +45,7 @@ public class SysMenuController {
         }
     }
 
-    // 更新菜单
+    @ApiOperation("更新菜单")
     @PutMapping(path = "/admin/menus/{id}")
     @ResponseBody
     public AjaxResponse updateMenu(@PathVariable(name = "id") Integer id, @RequestBody SysMenu sysMenu) {
@@ -51,7 +54,7 @@ public class SysMenuController {
         else return AjaxResponse.failure(-1, "更新失败");
     }
 
-    // 分页查询菜单列表
+    @ApiOperation("分页查询菜单列表")
     @GetMapping(path = "/menus")
     @ResponseBody
     public AjaxResponse getMenuList(
@@ -63,7 +66,7 @@ public class SysMenuController {
         return AjaxResponse.success("查询成功", data);
     }
 
-    // 查询树状结构菜单
+    @ApiOperation("查询树状结构菜单")
     @GetMapping(path = "/menus/tree")
     @ResponseBody
     public AjaxResponse getMenuTree() {

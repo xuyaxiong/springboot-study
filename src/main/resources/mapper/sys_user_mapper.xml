@@ -12,7 +12,8 @@
         account_non_locked,
         credentials_non_expired,
         enabled,
-        created_at
+        created_at,
+        updated_at
         ) values (
         #{username},
         #{password},
@@ -20,7 +21,8 @@
         #{accountNonLocked},
         #{credentialsNonExpired},
         #{enabled},
-        #{createdAt}
+        #{createdAt},
+        #{updatedAt}
         )
     </insert>
 

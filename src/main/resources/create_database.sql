@@ -112,20 +112,16 @@ insert into sys_user (id,username,password,email,account_non_expired,account_non
 -- 插入角色
 insert into sys_role (id,name,name_zh) values (1,'admin','管理员');
 insert into sys_role (id,name,name_zh) values (2,'user','用户');
-insert into sys_role (id,name,name_zh) values (3,'manager','经理');
-insert into sys_role (id,name,name_zh) values (4,'visitor','访客');
 
 -- 插入资源
 insert into sys_resource (id,name,url,created_at) values (1,'系统管理','/admin/**',now());
 
 -- 插入菜单
 insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (1,'权限管理',0,1,0,'http://www.baidu.com',0);
-insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (2,'订单管理',0,1,0,'http://www.baidu.com',0);
-insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (3,'商品管理',0,1,0,'http://www.baidu.com',0);
-insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (4,'用户列表',1,2,0,'http://www.baidu.com',0);
-insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (5,'菜单列表',1,2,0,'http://www.baidu.com',0);
-insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (6,'角色列表',1,2,0,'http://www.baidu.com',0);
-insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (7,'资源列表',1,2,0,'http://www.baidu.com',0);
+insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (2,'用户列表',1,2,0,'http://www.baidu.com',0);
+insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (3,'菜单列表',1,2,0,'http://www.baidu.com',0);
+insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (4,'角色列表',1,2,0,'http://www.baidu.com',0);
+insert into sys_menu(id,name,parent_id,level,sort,icon,hidden) values (5,'资源列表',1,2,0,'http://www.baidu.com',0);
 
 -- 关联用户和角色
 insert into sys_user_role (id,user_id,role_id) values (1,1,1);

@@ -4,9 +4,12 @@ import com.example.study.model.SysResource;
 import com.example.study.security.DynamicSecurityMetadataSource;
 import com.example.study.service.SysResourceService;
 import com.example.study.utils.AjaxResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@Api(tags = "资源管理")
 @RestController
 public class SysResourceController {
     @Autowired
@@ -15,6 +18,7 @@ public class SysResourceController {
     private DynamicSecurityMetadataSource dynamicSecurityMetadataSource;
 
 
+    @ApiOperation("添加资源")
     @PostMapping(path = "/admin/resources")
     @ResponseBody
     AjaxResponse addResource(
@@ -31,6 +35,7 @@ public class SysResourceController {
         }
     }
 
+    @ApiOperation("删除资源")
     @DeleteMapping(path = "/admin/resources/{id}")
     @ResponseBody
     public AjaxResponse deleteResourceById(@PathVariable(name = "id") Integer resourceId) {
@@ -43,6 +48,7 @@ public class SysResourceController {
         }
     }
 
+    @ApiOperation("更新资源")
     @PutMapping(path = "/admin/resources/{id}")
     @ResponseBody
     public AjaxResponse updateResource(@PathVariable Integer id, @RequestBody SysResource resource) {
@@ -54,6 +60,7 @@ public class SysResourceController {
         }
     }
 
+    @ApiOperation("分页查询资源列表")
     @GetMapping(path = "/resources")
     @ResponseBody
     AjaxResponse getResourceList(

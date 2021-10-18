@@ -5,6 +5,7 @@ import com.example.study.model.SysMenu;
 import com.example.study.model.SysResource;
 import com.example.study.model.SysRole;
 import com.example.study.utils.DataWithPageInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,9 +24,11 @@ public interface SysRoleService extends IService<SysRole> {
     DataWithPageInfo getRoleList(Long pageNum, Integer pageSize);
 
     // 分配菜单
+    @Transactional
     int allocMenus(Integer roleId, List<Integer> menuIds);
 
     // 分配资源
+    @Transactional
     int allocResources(Integer roleId, List<Integer> resourceIds);
 
     // 根据角色ID查询菜单

@@ -18,8 +18,17 @@ jwt:
 security:
   ignored: # 路径白名单
     urls:
-      - /login
-      - /register
+      - /login # 登录
+      - /register # 注册
+      # swagger
+      - /swagger-ui/index.html
+      - /swagger-resources/**
+      - /swagger/**
+      - /**/v3/api-docs
+      - /**/*.js
+      - /**/*.css
+      - /**/*.ico
+      - /webjars/springfox-swagger-ui/**
 
 logging:
   level:

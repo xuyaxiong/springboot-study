@@ -8,6 +8,8 @@ import com.example.study.service.SysRoleService;
 import com.example.study.service.SysUserService;
 import com.example.study.utils.AjaxResponse;
 import com.example.study.utils.DataWithPageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@Api(tags = "用户管理")
 @RestController
 public class SysUserController {
 
@@ -37,7 +40,7 @@ public class SysUserController {
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
-    // 用户登录
+    @ApiOperation("用户登录")
     @PostMapping(path = "/login")
     @ResponseBody
     public AjaxResponse login(
@@ -54,7 +57,7 @@ public class SysUserController {
         return AjaxResponse.success("登录成功", tokenMap);
     }
 
-    // 用户注册
+    @ApiOperation("用户注册")
     @PostMapping(path = "/register")
     @ResponseBody
     public AjaxResponse register(
@@ -68,7 +71,7 @@ public class SysUserController {
         else return AjaxResponse.failure(-1, "注册失败");
     }
 
-    // 刷新Token
+    @ApiOperation("刷新Token")
     @GetMapping(path = "/refreshToken")
     @ResponseBody
     public AjaxResponse refreshToken(HttpServletRequest request) {
@@ -84,7 +87,7 @@ public class SysUserController {
         }
     }
 
-    // 删除用户
+    @ApiOperation("删除用户")
     @DeleteMapping(path = "/admin/users/{id}")
     @ResponseBody
     public AjaxResponse deleteUserById(
@@ -94,6 +97,7 @@ public class SysUserController {
         return AjaxResponse.success("删除成功");
     }
 
+    @ApiOperation("更新用户")
     @PutMapping(path = "/admin/users/{id}")
     @ResponseBody
     public AjaxResponse updateUser(@PathVariable Long id, @RequestBody SysUser user) {
@@ -105,7 +109,7 @@ public class SysUserController {
         }
     }
 
-    // 查询用户列表
+    @ApiOperation("查询用户列表")
     @GetMapping(path = "/users")
     @ResponseBody
     public AjaxResponse getUserList(
@@ -117,7 +121,7 @@ public class SysUserController {
         return AjaxResponse.success("查询成功", result);
     }
 
-    // 获取当前登录用户信息
+    @ApiOperation("获取当前登录用户信息")
     @GetMapping(path = "/users/info")
     @ResponseBody
     public AjaxResponse getUserInfo(Principal principal) {

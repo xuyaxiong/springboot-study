@@ -9,6 +9,15 @@ mybatis:
   typeAliasesPackage: com.example.study.model
   mapperLocations: classpath:mapper/*.xml
 
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: deletedAt
+      logic-delete-value: now()
+      logic-not-delete-value: 'null'
+
 jwt:
   tokenHeader: Authorization
   secret: 12345678901234567890123456789012

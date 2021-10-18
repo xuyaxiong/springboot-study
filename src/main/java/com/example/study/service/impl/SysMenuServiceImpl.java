@@ -26,8 +26,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public DataWithPageInfo getMenuList(String keyword, Long pageNum, Integer pageSize) {
         QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
         wrapper
-                .orderByDesc("created_at") // 根据创建时间降序排列
-                .isNull("deleted_at");
+                .orderByDesc("created_at");// 根据创建时间降序排列
         if (keyword != null && !keyword.equals("")) {
             wrapper.like("name", keyword);
         }
@@ -38,10 +37,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public List<SysMenuNode> getMenuTree() {
-        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
-        wrapper
-                .isNull("deleted_at");
-        List<SysMenu> menuList = sysMenuMapper.selectList(wrapper);
+        List<SysMenu> menuList = list();
         return menuList.stream()
                 .filter(menu -> menu.getParentId().equals(0))
                 .map(menu -> covertMenuNode(menu, menuList)).collect(Collectors.toList());
@@ -66,8 +62,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public boolean addMenu(SysMenu sysMenu) {
         QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
         wrapper
-                .eq("name", sysMenu.getName())
-                .isNull("deleted_at");
+                .eq("name", sysMenu.getName());
         SysMenu exists = sysMenuMapper.selectOne(wrapper);
         if (exists == null) {
             return sysMenuMapper.insert(sysMenu) > 0;
@@ -81,8 +76,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
         wrapper
                 .ne("id", menuId)
-                .eq("name", sysMenu.getName())
-                .isNull("deleted_at");
+                .eq("name", sysMenu.getName());
         SysMenu exists = sysMenuMapper.selectOne(wrapper);
         if (exists == null) {
             sysMenu.setId(menuId);

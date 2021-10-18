@@ -23,8 +23,7 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
     public SysResource addResource(SysResource resource) {
         QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
         wrapper
-                .eq("name", resource.getName())
-                .isNull("deleted_at");
+                .eq("name", resource.getName());
         SysResource exists = sysResourceMapper.selectOne(wrapper);
         if (exists == null) {
             sysResourceMapper.insert(resource);
@@ -48,8 +47,7 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
     public DataWithPageInfo getResourceList(Long pageNum, Integer pageSize) {
         QueryWrapper<SysResource> wrapper = new QueryWrapper<>();
         wrapper
-                .orderByDesc("created_at") // 根据创建时间降序排列
-                .isNull("deleted_at");
+                .orderByDesc("created_at"); // 根据创建时间降序排列
         Page<SysResource> page = new Page<>(pageNum, pageSize);
         sysResourceMapper.selectPage(page, wrapper);
         return PageInfo.convert(page);

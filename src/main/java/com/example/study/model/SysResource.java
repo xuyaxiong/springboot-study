@@ -23,5 +23,6 @@ public class SysResource {
         this.name = name;
         this.url = url;
         this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
 }

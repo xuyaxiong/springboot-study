@@ -30,8 +30,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public SysRole addRole(SysRole role) {
         QueryWrapper<SysRole> wrapper = new QueryWrapper<>();
         wrapper
-                .eq("name", role.getName())
-                .isNull("deleted_at");
+                .eq("name", role.getName());
         SysRole exists = sysRoleMapper.selectOne(wrapper);
         if (exists == null) {
             sysRoleMapper.insert(role);
@@ -55,8 +54,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public DataWithPageInfo getRoleList(Long pageNum, Integer pageSize) {
         QueryWrapper<SysRole> wrapper = new QueryWrapper<>();
         wrapper
-                .orderByDesc("created_at") // 根据创建时间降序排列
-                .isNull("deleted_at");
+                .orderByDesc("created_at"); // 根据创建时间降序排列
         Page<SysRole> page = new Page<>(pageNum, pageSize);
         sysRoleMapper.selectPage(page, wrapper);
         return PageInfo.convert(page);

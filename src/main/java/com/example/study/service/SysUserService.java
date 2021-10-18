@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface SysUserService extends IService<SysUser>, UserDetailsService {
 
-
     // 用户登录
     String login(String username, String password);
 

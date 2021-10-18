@@ -33,5 +33,6 @@ public class SysMenu {
         this.icon = icon;
         this.hidden = hidden;
         this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
 }

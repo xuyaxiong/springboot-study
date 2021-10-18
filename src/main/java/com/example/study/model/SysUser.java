@@ -35,5 +35,6 @@ public class SysUser {
         this.credentialsNonExpired = true;
         this.enabled = true;
         this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
 }

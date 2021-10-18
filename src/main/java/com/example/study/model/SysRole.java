@@ -25,5 +25,6 @@ public class SysRole {
         this.name = name;
         this.nameZh = nameZh;
         this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
 }

@@ -63,8 +63,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public SysUser register(SysUser user) {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper
-                .eq("username", user.getUsername())
-                .isNull("deleted_at");
+                .eq("username", user.getUsername());
         SysUser exists = sysUserMapper.selectOne(wrapper);
         if (exists == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -82,8 +81,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public DataWithPageInfo getUserList(String keyword, Long pageNum, Integer pageSize) {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper
-                .orderByDesc("created_at") // 根据创建时间降序排列
-                .isNull("deleted_at");
+                .orderByDesc("created_at"); // 根据创建时间降序排列
         if (keyword != null && !keyword.equals("")) {
             wrapper.like("username", keyword);
         }
@@ -94,7 +92,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public void deleteUserById(Long userId) {
-        sysUserMapper.deleteUserById(userId);
+        sysUserMapper.deleteById(userId);
     }
 
     @Override
@@ -108,8 +106,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public SysUser findUserByUsername(String username) {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper
-                .eq("username", username)
-                .isNull("deleted_at");
+                .eq("username", username);
         return sysUserMapper.selectOne(wrapper);
     }
 
@@ -122,8 +119,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper
-                .eq("username", username)
-                .isNull("deleted_at");
+                .eq("username", username);
         SysUser sysUser = sysUserMapper.selectOne(wrapper);
         List<SysResource> privileges = sysResourceMapper.findResourceListByUserId(sysUser.getId());
         return new SysUserDetails(sysUser, privileges);

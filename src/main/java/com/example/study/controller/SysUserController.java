@@ -49,7 +49,7 @@ public class SysUserController {
     ) {
         String token = sysUserService.login(username, password);
         if (token == null) {
-            return AjaxResponse.failure(-1, "登录失败");
+            return AjaxResponse.validateFailed("用户名或密码错误");
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
@@ -68,7 +68,7 @@ public class SysUserController {
         user = sysUserService.register(user);
         if (user != null)
             return AjaxResponse.success("注册成功", user);
-        else return AjaxResponse.failure(-1, "注册失败");
+        else return AjaxResponse.failure("注册失败");
     }
 
     @ApiOperation("刷新Token")
@@ -78,7 +78,7 @@ public class SysUserController {
         String token = request.getHeader(tokenHeader);
         String refreshToken = sysUserService.refreshToken(token);
         if (refreshToken == null) {
-            return AjaxResponse.failure(-1, "Token已过期");
+            return AjaxResponse.failure("Token已过期");
         } else {
             Map<String, String> tokenMap = new HashMap<>();
             tokenMap.put("token", refreshToken);
@@ -105,7 +105,7 @@ public class SysUserController {
         if (count > 0) {
             return AjaxResponse.success("更新成功");
         } else {
-            return AjaxResponse.failure(-1, "更新失败");
+            return AjaxResponse.failure("更新失败");
         }
     }
 
@@ -126,7 +126,7 @@ public class SysUserController {
     @ResponseBody
     public AjaxResponse getUserInfo(Principal principal) {
         if (principal == null) {
-            return AjaxResponse.failure(-1, "查询失败");
+            return AjaxResponse.failure("查询失败");
         }
         SysUser user = sysUserService.findUserByUsername(principal.getName());
         Map<String, Object> data = new HashMap<>();

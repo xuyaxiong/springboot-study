@@ -29,7 +29,7 @@ public class SysMenuController {
         if (isSaved) {
             return AjaxResponse.success("添加成功");
         } else {
-            return AjaxResponse.failure(-1, "存储失败");
+            return AjaxResponse.failure("存储失败");
         }
     }
 
@@ -41,7 +41,7 @@ public class SysMenuController {
         if (count > 0) {
             return AjaxResponse.success("删除成功");
         } else {
-            return AjaxResponse.failure(-1, "删除失败");
+            return AjaxResponse.failure("删除失败");
         }
     }
 
@@ -51,7 +51,7 @@ public class SysMenuController {
     public AjaxResponse updateMenu(@PathVariable(name = "id") Integer id, @RequestBody SysMenu sysMenu) {
         boolean isUpdated = sysMenuService.updateMenu(id, sysMenu);
         if (isUpdated) return AjaxResponse.success("更新成功");
-        else return AjaxResponse.failure(-1, "更新失败");
+        else return AjaxResponse.failure("更新失败");
     }
 
     @ApiOperation("分页查询菜单列表")

@@ -31,7 +31,7 @@ public class SysResourceController {
             dynamicSecurityMetadataSource.clearDataSource();
             return AjaxResponse.success("添加成功", resource);
         } else {
-            return AjaxResponse.failure(-1, "添加失败");
+            return AjaxResponse.failure("添加失败");
         }
     }
 
@@ -44,7 +44,7 @@ public class SysResourceController {
             dynamicSecurityMetadataSource.clearDataSource();
             return AjaxResponse.success("删除成功");
         } else {
-            return AjaxResponse.failure(-1, "删除失败");
+            return AjaxResponse.failure("删除失败");
         }
     }
 
@@ -56,7 +56,7 @@ public class SysResourceController {
         if (count > 0) {
             return AjaxResponse.success("更新成功");
         } else {
-            return AjaxResponse.failure(-1, "更新失败");
+            return AjaxResponse.failure("更新失败");
         }
     }
 

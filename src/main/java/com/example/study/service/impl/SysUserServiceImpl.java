@@ -3,17 +3,17 @@ package com.example.study.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.study.exception.Asserts;
+import com.example.study.mapper.SysLoginLogMapper;
 import com.example.study.mapper.SysResourceMapper;
 import com.example.study.mapper.SysRoleMapper;
 import com.example.study.mapper.SysUserMapper;
-import com.example.study.model.SysResource;
-import com.example.study.model.SysRole;
-import com.example.study.model.SysUser;
-import com.example.study.model.SysUserDetails;
+import com.example.study.model.*;
 import com.example.study.service.SysUserService;
 import com.example.study.utils.DataWithPageInfo;
 import com.example.study.utils.JwtTokenUtil;
 import com.example.study.utils.PageInfo;
+import com.example.study.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +21,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -35,28 +38,39 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     private SysResourceMapper sysResourceMapper;
     @Autowired
+    private SysLoginLogMapper sysLoginLogMapper;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     @Override
     public String login(String username, String password) {
-        String token = null;
-        try {
-            UserDetails userDetails = loadUserByUsername(username);
-            if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-                throw new Exception("密码不正确");
-            }
-            if (!userDetails.isEnabled()) {
-                throw new Exception("账号已被禁用");
-            }
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            token = jwtTokenUtil.generateToken(userDetails);
-        } catch (Exception e) {
-            e.printStackTrace();
+        UserDetails userDetails = loadUserByUsername(username);
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            Asserts.failure("密码不正确");
         }
-        return token;
+        if (!userDetails.isEnabled()) {
+            Asserts.failure("账号已被禁用");
+        }
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        addLoginLog(username);
+        return jwtTokenUtil.generateToken(userDetails);
+    }
+
+    private void addLoginLog(String username) {
+        SysUser user = findUserByUsername(username);
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        SysLoginLog log = new SysLoginLog();
+        log.setUserId(user.getId());
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            log.setUserAgent(request.getHeader("user-agent"));
+            log.setIp(RequestUtil.getRequestIp(request));
+        }
+        log.setCreatedAt(new Date());
+        sysLoginLogMapper.insert(log);
     }
 
     @Override

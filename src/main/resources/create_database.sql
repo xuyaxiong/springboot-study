@@ -103,6 +103,19 @@ create table sys_role_menu
 );
 alter table sys_role_menu comment '角色菜单关联表';
 
+-- 创建登录日志表
+drop table if exists sys_login_log;
+create table sys_login_log
+(
+    id bigint not null auto_increment,
+    user_id Long comment '用户ID',
+    ip varchar(20) comment '登录IP',
+    address varchar(20) comment '登录地址',
+    user_agent varchar(150) comment '用户代理',
+    created_at datetime default now() comment '登录时间',
+    primary key (id)
+);
+
 -- 插入用户
 -- 密码 123456
 insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled) values (1,'admin','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','xyxlindy@163.com',true,true,true,true);

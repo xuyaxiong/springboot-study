@@ -18,22 +18,47 @@ public class AjaxResponse {
     private Object data;
 
     public static AjaxResponse success(String msg, Object data) {
-        AjaxResponse res = new AjaxResponse();
-        res.code = 200;
-        res.msg = msg;
-        res.data = data;
-        return res;
+        return new AjaxResponse(ResultCode.SUCCESS.getCode(), msg, data);
     }
 
     public static AjaxResponse success(String msg) {
-        return AjaxResponse.success(msg, null);
+        return success(msg, null);
+    }
+
+    public static AjaxResponse success(Object data) {
+        return new AjaxResponse(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMsg(), data);
     }
 
     public static AjaxResponse failure(int code, String msg) {
-        AjaxResponse res = new AjaxResponse();
-        res.code = code;
-        res.msg = msg;
-        res.data = null;
-        return res;
+        return new AjaxResponse(code, msg, null);
+    }
+
+    public static AjaxResponse failure(String msg) {
+        return failure(ResultCode.FAILED.getCode(), msg);
+    }
+
+    public static AjaxResponse failure(ResultCode resultCode) {
+        return failure(resultCode.getCode(), resultCode.getMsg());
+    }
+
+    /**
+     * 参数校验失败
+     */
+    public static AjaxResponse validateFailed(String msg) {
+        return failure(ResultCode.VALIDATE_FAILED.getCode(), msg);
+    }
+
+    /**
+     * 未登录
+     */
+    public static AjaxResponse unauthorized() {
+        return failure(ResultCode.UNAUTHORIZED);
+    }
+
+    /**
+     * 未授权
+     */
+    public static AjaxResponse forbidden() {
+        return failure(ResultCode.FORBIDDEN);
     }
 }

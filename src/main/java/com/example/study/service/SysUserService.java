@@ -1,5 +1,6 @@
 package com.example.study.service;
 
+import cn.hutool.core.lang.Pair;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
@@ -23,7 +24,7 @@ public interface SysUserService extends IService<SysUser>, UserDetailsService {
     DataWithPageInfo getUserList(String keyword, Long pageNum, Integer pageSize);
 
     // 删除用户
-    void deleteUserById(Long userId);
+    int deleteUserById(Long userId);
 
     // 更新用户
     int updateUser(Long id, SysUser user);
@@ -33,4 +34,7 @@ public interface SysUserService extends IService<SysUser>, UserDetailsService {
 
     // 根据userId查询角色列表
     List<SysRole> findRoleListByUserId(Long userId);
+
+    // 修改密码
+    Pair<Boolean, String> changePassword(String username, String oldPassword, String newPassword);
 }

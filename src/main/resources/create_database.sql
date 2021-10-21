@@ -107,7 +107,6 @@ alter table sys_role_menu comment '角色菜单关联表';
 -- 密码 123456
 insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled) values (1,'admin','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','xyxlindy@163.com',true,true,true,true);
 insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled) values (2,'user1','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','user1@163.com',true,true,true,true);
-insert into sys_user (id,username,password,email,account_non_expired,account_non_locked,credentials_non_expired,enabled) values (3,'manager1','$2a$10$ZECz39Ra7ru3xcxqwduvSO1oTyE.oIYJcVn5Jq3OuMtTXiJcfm9D6','manager1@163.com',true,true,true,true);
 
 -- 插入角色
 insert into sys_role (id,name,name_zh) values (1,'admin','管理员');

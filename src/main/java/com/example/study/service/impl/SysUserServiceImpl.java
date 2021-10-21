@@ -1,5 +1,6 @@
 package com.example.study.service.impl;
 
+import cn.hutool.core.lang.Pair;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -91,8 +92,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public void deleteUserById(Long userId) {
-        sysUserMapper.deleteById(userId);
+    public int deleteUserById(Long userId) {
+        return sysUserMapper.deleteById(userId);
     }
 
     @Override
@@ -116,12 +117,33 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    public Pair<Boolean, String> changePassword(String username, String oldPassword, String newPassword) {
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", username);
+        SysUser user = sysUserMapper.selectOne(wrapper);
+        if (user == null) {
+            return new Pair<>(false, "用户不存在");
+        }
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            return new Pair<>(false, "旧密码错误");
+        }
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            return new Pair<>(false, "新密码与旧密码相同");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setUpdatedAt(new Date());
+        sysUserMapper.updateById(user);
+        return new Pair<>(true, "修改成功");
+
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper
                 .eq("username", username);
         SysUser sysUser = sysUserMapper.selectOne(wrapper);
-        List<SysResource> privileges = sysResourceMapper.findResourceListByUserId(sysUser.getId());
-        return new SysUserDetails(sysUser, privileges);
+        List<SysResource> resources = sysResourceMapper.findResourceListByUserId(sysUser.getId());
+        return new SysUserDetails(sysUser, resources);
     }
 }

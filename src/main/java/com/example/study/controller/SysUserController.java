@@ -1,5 +1,7 @@
 package com.example.study.controller;
 
+import cn.hutool.core.lang.Pair;
+import com.example.study.dto.ChangePasswordParam;
 import com.example.study.model.SysMenu;
 import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -93,8 +96,11 @@ public class SysUserController {
     public AjaxResponse deleteUserById(
             @PathVariable(name = "id") Long userId
     ) {
-        sysUserService.deleteUserById(userId);
-        return AjaxResponse.success("删除成功");
+        int count = sysUserService.deleteUserById(userId);
+        if (count > 0)
+            return AjaxResponse.success("删除成功");
+        else
+            return AjaxResponse.failure(-1, "删除失败");
     }
 
     @ApiOperation("更新用户")
@@ -138,5 +144,21 @@ public class SysUserController {
         List<SysMenu> menus = sysMenuService.findMenuListByUserId(user.getId());
         data.put("menus", menus);
         return AjaxResponse.success("查询成功", data);
+    }
+
+    @ApiOperation("修改密码")
+    @PostMapping(path = "/users/changePassword")
+    @ResponseBody
+    public AjaxResponse changePassword(@Validated @RequestBody ChangePasswordParam param) {
+        Pair<Boolean, String> res = sysUserService.changePassword(
+                param.getUsername(),
+                param.getOldPassword(),
+                param.getNewPassword()
+        );
+        if (res.getKey()) {
+            return AjaxResponse.success(res.getValue());
+        } else {
+            return AjaxResponse.failure(-1, res.getValue());
+        }
     }
 }

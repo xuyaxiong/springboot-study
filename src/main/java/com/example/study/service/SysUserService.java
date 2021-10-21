@@ -2,6 +2,7 @@ package com.example.study.service;
 
 import cn.hutool.core.lang.Pair;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.study.dto.RegisterParam;
 import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
 import com.example.study.utils.DataWithPageInfo;
@@ -15,7 +16,7 @@ public interface SysUserService extends IService<SysUser>, UserDetailsService {
     String login(String username, String password);
 
     // 用户注册
-    SysUser register(SysUser user);
+    boolean register(RegisterParam registerParam);
 
     // 刷新Token
     String refreshToken(String oldToken);

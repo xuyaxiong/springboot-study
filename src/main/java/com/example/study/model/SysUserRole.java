@@ -14,4 +14,9 @@ public class SysUserRole {
     private Integer id;
     private Long userId;
     private Integer roleId;
+
+    public SysUserRole(Long userId, Integer roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
 }

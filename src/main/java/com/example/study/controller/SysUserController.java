@@ -2,11 +2,13 @@ package com.example.study.controller;
 
 import cn.hutool.core.lang.Pair;
 import com.example.study.dto.ChangePasswordParam;
+import com.example.study.dto.RegisterParam;
 import com.example.study.model.SysMenu;
 import com.example.study.model.SysRole;
 import com.example.study.model.SysUser;
 import com.example.study.service.SysMenuService;
 import com.example.study.service.SysRoleService;
+import com.example.study.service.SysUserRoleService;
 import com.example.study.service.SysUserService;
 import com.example.study.utils.AjaxResponse;
 import com.example.study.utils.DataWithPageInfo;
@@ -32,6 +34,8 @@ public class SysUserController {
 
     @Autowired
     private SysUserService sysUserService;
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
     @Autowired
     private SysRoleService sysRoleService;
     @Autowired
@@ -63,15 +67,12 @@ public class SysUserController {
     @ApiOperation("用户注册")
     @PostMapping(path = "/register")
     @ResponseBody
-    public AjaxResponse register(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password
-    ) {
-        SysUser user = new SysUser(username, password);
-        user = sysUserService.register(user);
-        if (user != null)
-            return AjaxResponse.success("注册成功", user);
-        else return AjaxResponse.failure("注册失败");
+    public AjaxResponse register(@Validated @RequestBody RegisterParam registerParam) {
+        boolean res = sysUserService.register(registerParam);
+        if (res)
+            return AjaxResponse.success("注册成功");
+        else
+            return AjaxResponse.failure("注册失败");
     }
 
     @ApiOperation("刷新Token")
@@ -158,7 +159,19 @@ public class SysUserController {
         if (res.getKey()) {
             return AjaxResponse.success(res.getValue());
         } else {
-            return AjaxResponse.failure(-1, res.getValue());
+            return AjaxResponse.failure(res.getValue());
         }
+    }
+
+    @ApiOperation("给用户分配角色")
+    @PostMapping(path = "/admin/users/allocRoles")
+    public AjaxResponse allocRoles(
+            @RequestParam(name = "userId") Long userId,
+            @RequestParam(name = "roleIds") List<Integer> roleIds) {
+        boolean res = sysUserRoleService.allocRoles(userId, roleIds);
+        if (res)
+            return AjaxResponse.success("分配成功");
+        else
+            return AjaxResponse.failure("分配失败");
     }
 }

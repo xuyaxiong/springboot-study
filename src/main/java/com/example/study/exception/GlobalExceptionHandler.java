@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
         if (bindingResult.hasErrors()) {
             FieldError fieldError = bindingResult.getFieldError();
             if (fieldError != null) {
-                msg = fieldError.getField() + fieldError.getDefaultMessage();
+                msg = fieldError.getField() + ": " + fieldError.getDefaultMessage();
             }
         }
         return AjaxResponse.validateFailed(msg);
@@ -39,9 +39,9 @@ public class GlobalExceptionHandler {
         if (bindingResult.hasErrors()) {
             FieldError fieldError = bindingResult.getFieldError();
             if (fieldError != null) {
-                msg = fieldError.getField() + fieldError.getDefaultMessage();
+                msg = fieldError.getField() + ": " + fieldError.getDefaultMessage();
             }
         }
-        return AjaxResponse.failure(-1, msg);
+        return AjaxResponse.validateFailed(msg);
     }
 }

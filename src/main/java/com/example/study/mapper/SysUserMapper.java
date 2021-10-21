@@ -5,7 +5,7 @@ import com.example.study.model.SysUser;
 
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
-    void addUser(SysUser user);
+    int addUser(SysUser user);
 
     void deleteUserById(Long userId);
 }

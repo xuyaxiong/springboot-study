@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Pair;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.study.dto.RegisterParam;
 import com.example.study.exception.Asserts;
 import com.example.study.mapper.SysLoginLogMapper;
 import com.example.study.mapper.SysResourceMapper;
@@ -75,16 +76,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public SysUser register(SysUser user) {
+    public boolean register(RegisterParam registerParam) {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
-        wrapper
-                .eq("username", user.getUsername());
+        wrapper.eq("username", registerParam.getUsername());
         SysUser exists = sysUserMapper.selectOne(wrapper);
-        if (exists == null) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            sysUserMapper.addUser(user);
-            return user;
-        } else return null;
+        if (exists != null) Asserts.failure("该用户名已存在");
+        SysUser user = new SysUser(registerParam.getUsername(), passwordEncoder.encode(registerParam.getPassword()));
+        int count = sysUserMapper.addUser(user);
+        return count > 0;
     }
 
     @Override
@@ -154,8 +153,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
-        wrapper
-                .eq("username", username);
+        wrapper.eq("username", username);
         SysUser sysUser = sysUserMapper.selectOne(wrapper);
         List<SysResource> resources = sysResourceMapper.findResourceListByUserId(sysUser.getId());
         return new SysUserDetails(sysUser, resources);

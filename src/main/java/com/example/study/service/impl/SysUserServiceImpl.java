@@ -1,6 +1,9 @@
 package com.example.study.service.impl;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.CircleCaptcha;
 import cn.hutool.core.lang.Pair;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,12 +14,14 @@ import com.example.study.mapper.SysResourceMapper;
 import com.example.study.mapper.SysRoleMapper;
 import com.example.study.mapper.SysUserMapper;
 import com.example.study.model.*;
+import com.example.study.service.RedisService;
 import com.example.study.service.SysUserService;
 import com.example.study.utils.DataWithPageInfo;
 import com.example.study.utils.JwtTokenUtil;
 import com.example.study.utils.PageInfo;
 import com.example.study.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,6 +50,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private RedisService redisService;
+    @Value("${redis.key.prefix.captcha}")
+    private String REDIS_KEY_PREFIX_CAPTCHA;
+    @Value(("${redis.key.expire.captcha}"))
+    private Long CAPTCHA_EXPIRE_SECONDS;
 
     @Override
     public String login(String username, String password) {
@@ -148,6 +159,26 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUserMapper.updateById(user);
         return new Pair<>(true, "修改成功");
 
+    }
+
+    @Override
+    public Pair<String, CircleCaptcha> generateCaptcha() {
+        CircleCaptcha captcha = CaptchaUtil.createCircleCaptcha(116, 36, 4, 5);
+        String code = captcha.getCode();
+        String uuid = IdUtil.simpleUUID();
+        String key = REDIS_KEY_PREFIX_CAPTCHA + uuid;
+        redisService.set(key, code);
+        redisService.expire(key, CAPTCHA_EXPIRE_SECONDS);
+        return new Pair<>(uuid, captcha);
+    }
+
+    @Override
+    public boolean verifyCaptcha(String uuid, String captcha) {
+        String key = REDIS_KEY_PREFIX_CAPTCHA + uuid;
+        String realAuthCode = redisService.get(key);
+        if (realAuthCode == null) Asserts.failure("验证码已失效");
+        redisService.remove(key);
+        return captcha.equals(realAuthCode);
     }
 
     @Override

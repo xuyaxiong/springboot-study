@@ -1,5 +1,6 @@
 package com.example.study.controller;
 
+import cn.hutool.captcha.CircleCaptcha;
 import cn.hutool.core.lang.Pair;
 import com.example.study.dto.ChangePasswordParam;
 import com.example.study.dto.RegisterParam;
@@ -165,6 +166,7 @@ public class SysUserController {
 
     @ApiOperation("给用户分配角色")
     @PostMapping(path = "/admin/users/allocRoles")
+    @ResponseBody
     public AjaxResponse allocRoles(
             @RequestParam(name = "userId") Long userId,
             @RequestParam(name = "roleIds") List<Integer> roleIds) {
@@ -173,5 +175,16 @@ public class SysUserController {
             return AjaxResponse.success("分配成功");
         else
             return AjaxResponse.failure("分配失败");
+    }
+
+    @ApiOperation("获取图片验证码")
+    @GetMapping(path = "/captcha")
+    @ResponseBody
+    public AjaxResponse getCaptcha() {
+        Pair<String, CircleCaptcha> pair = sysUserService.generateCaptcha();
+        Map<String, String> map = new HashMap<>();
+        map.put("uuid", pair.getKey());
+        map.put("captcha", pair.getValue().getImageBase64());
+        return AjaxResponse.success("操作成功", map);
     }
 }

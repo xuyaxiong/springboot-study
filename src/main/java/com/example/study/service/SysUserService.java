@@ -1,5 +1,6 @@
 package com.example.study.service;
 
+import cn.hutool.captcha.CircleCaptcha;
 import cn.hutool.core.lang.Pair;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.study.dto.RegisterParam;
@@ -38,4 +39,10 @@ public interface SysUserService extends IService<SysUser>, UserDetailsService {
 
     // 修改密码
     Pair<Boolean, String> changePassword(String username, String oldPassword, String newPassword);
+
+    // 根据手机号生成图片验证码
+    Pair<String, CircleCaptcha> generateCaptcha();
+
+    // 判断图片验证码和手机号是否匹配
+    boolean verifyCaptcha(String uuid, String captcha);
 }
